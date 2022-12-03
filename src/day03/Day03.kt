@@ -21,7 +21,9 @@ fun main() {
     }
 
     fun part1(rucksacks: List<Rucksack>): Int {
-        return rucksacks.flatMap { it.firstCompartment.intersect(it.secondCompartment) }.sumOf { Rucksack.priority(it) }
+        return rucksacks
+            .flatMap { it.firstCompartment.intersect(it.secondCompartment) }
+            .sumOf { Rucksack.priority(it) }
     }
 
     fun part2(rucksacks: List<Set<Char>>): Int {
