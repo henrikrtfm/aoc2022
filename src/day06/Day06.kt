@@ -5,7 +5,7 @@ import utils.Resources.resourceAsString
 fun main(){
 
     fun findMarker(windowSize: Int, buffer: String): Int{
-        return windowSize + buffer.windowed(windowSize, 1).map { it.allUnique() }.indexOfFirst { it }
+        return windowSize + buffer.windowed(windowSize, 1).indexOfFirst { it.allUnique() }
     }
 
     fun part1(input: String): Int{
