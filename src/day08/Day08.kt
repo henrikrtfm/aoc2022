@@ -74,9 +74,6 @@ data class Lineofsight(
     var right: List<Point> = mutableListOf()
 )
 
-private operator fun Point.plus(that: Point): Point =
-    Point(this.first + that.first, this.second + that.second)
-
 private fun List<Int>.countUntil(pred: (Int) -> Boolean): Int{
     var res = 0
     for (element in this) {
@@ -86,6 +83,3 @@ private fun List<Int>.countUntil(pred: (Int) -> Boolean): Int{
     }
     return res
 }
-
-private operator fun Treemap.contains(point: Point): Boolean =
-    point.first in this.indices && point.second in this.first().indices
