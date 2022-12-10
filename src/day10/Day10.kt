@@ -3,6 +3,7 @@ package day10
 import utils.Resources.resourceAsListOfString
 
 private const val ROWLENGTH = 40
+private val INTERVALS = listOf(20,60,100,140,180,220)
 
 fun main(){
     val input = resourceAsListOfString("src/day10/Day10.txt")
@@ -10,14 +11,13 @@ fun main(){
     var register = 1
     var cycle = 0
     var crt = ""
-    val intervals = listOf(20,60,100,140,180,220)
     var signalStrength = 0
 
     fun part1(commands: ArrayDeque<Command>): Int{
         while(commands.isNotEmpty()){
             cycle +=1
             val command = commands.removeFirst()
-            if(cycle in intervals){
+            if(cycle in INTERVALS){
                 signalStrength += (cycle * register)
             }
             when{
