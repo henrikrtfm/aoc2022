@@ -1,21 +1,21 @@
 package day10
 
-import day10.Command.Companion.updateCycle
 import utils.Resources.resourceAsListOfString
 
 fun main(){
     val input = resourceAsListOfString("src/day10/Day10.txt")
-    val commands = input.map { Command.parse(it) }
+    val commands = ArrayDeque<Command>().apply { addAll(input.map{parseInput(it)})}
+    var register = 1
+    var cycle = 0
+    var crt = ""
+    val intervals = listOf(20,60,100,140,180,220)
 
-    fun execute(commands: List<Command>): Int{
-        var register = 1
-        var cycle = 0
+    fun execute(commands: ArrayDeque<Command>): Int{
         var signalStrength = 0
-        val commandStack = ArrayDeque<Command>().apply { addAll(commands)}
-        while(commandStack.isNotEmpty()){
+        while(commands.isNotEmpty()){
             cycle +=1
-            val command = commandStack.removeFirst()
-            if(cycle in listOf(20,60,100,140,180,220)){
+            val command = commands.removeFirst()
+            if(cycle in intervals){
                 signalStrength += (cycle * register)
             }
             when{
@@ -23,7 +23,7 @@ fun main(){
                 command.cycles == 0 -> register += command.value
                 else -> {
                     command.updateCycle()
-                    commandStack.addFirst(command)
+                    commands.addFirst(command)
                 }
             }
 
@@ -31,13 +31,9 @@ fun main(){
         return signalStrength
     }
 
-    fun executeAndDraw(commands: List<Command>): String{
-        var register = 1
-        var cycle = 0
-        var crt = ""
-        val commandStack = ArrayDeque<Command>().apply { addAll(commands)}
-        while(commandStack.isNotEmpty()){
-            val command = commandStack.removeFirst()
+    fun executeAndDraw(commands: ArrayDeque<Command>): String{
+        while(commands.isNotEmpty()){
+            val command = commands.removeFirst()
             crt += when (cycle) {
                 in listOf(register-1,register,register+1) -> "#"
                 else -> "."
@@ -48,7 +44,7 @@ fun main(){
                 command.cycles == 0 -> register += command.value
                 else -> {
                     command.updateCycle()
-                    commandStack.addFirst(command)
+                    commands.addFirst(command)
                 }
             }
             when(cycle){
@@ -58,11 +54,11 @@ fun main(){
         return crt
     }
 
-    fun part1(commands: List<Command>): Int{
+    fun part1(commands: ArrayDeque<Command>): Int{
         return execute(commands)
     }
 
-    fun part2(commands: List<Command>): String{
+    fun part2(commands: ArrayDeque<Command>): String{
         return executeAndDraw(commands)
 
     }
@@ -70,26 +66,21 @@ fun main(){
     part2(commands).chunked(40).forEach { println(it) }
 }
 
-data class Command(
-    val instruction: String,
-    val value: Int,
-    var cycles: Int
-) {
-    companion object {
-        fun parse(line: String): Command {
-            val instruction = line.substringBefore(" ")
-            val value = line.substringAfter(" ").toIntOrNull() ?: 0
-            val cycles = when(instruction){
-                "addx" -> 1
-                else -> 0
-            }
-            return Command(instruction, value, cycles)
-        }
+fun parseInput(line: String): Command {
+    val instruction = line.substringBefore(" ")
+    val value = line.substringAfter(" ").toIntOrNull() ?: 0
+    val cycles = when(instruction){
+        "addx" -> 1
+        else -> 0
+    }
+    return Command(instruction, value, cycles)
+}
 
-        fun Command.updateCycle(){
+class Command(val instruction: String, val value: Int, var cycles: Int) {
+
+        fun updateCycle(){
             this.cycles -= 1
         }
 
-    }
 }
 
