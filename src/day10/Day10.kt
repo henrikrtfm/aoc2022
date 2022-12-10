@@ -2,6 +2,8 @@ package day10
 
 import utils.Resources.resourceAsListOfString
 
+private const val ROWLENGTH = 40
+
 fun main(){
     val input = resourceAsListOfString("src/day10/Day10.txt")
     val commands = ArrayDeque<Command>().apply { addAll(input.map{parseInput(it)})}
@@ -34,7 +36,7 @@ fun main(){
     fun part2(commands: ArrayDeque<Command>): String{
         while(commands.isNotEmpty()){
             val command = commands.removeFirst()
-            crt += when (cycle) {
+            crt += when (cycle % ROWLENGTH) {
                 in listOf(register-1,register,register+1) -> "#"
                 else -> "."
             }
@@ -46,9 +48,6 @@ fun main(){
                     command.reduceCycle()
                     commands.addFirst(command)
                 }
-            }
-            when(cycle){
-                40 -> cycle = 0
             }
         }
         return crt
