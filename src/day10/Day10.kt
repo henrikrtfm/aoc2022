@@ -37,7 +37,7 @@ fun main(){
         while(commands.isNotEmpty()){
             val command = commands.removeFirst()
             crt += when (cycle % ROWLENGTH) {
-                in listOf(register-1,register,register+1) -> "#"
+                in sprites(register) -> "#"
                 else -> "."
             }
             cycle +=1
@@ -55,6 +55,10 @@ fun main(){
 
     println(part1(commands))
     part2(commands).chunked(40).forEach { println(it) }
+}
+
+fun sprites(register: Int): List<Int>{
+    return listOf(register-1,register,register+1)
 }
 
 fun parseInput(line: String): Command {
