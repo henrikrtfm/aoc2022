@@ -9,9 +9,9 @@ fun main(){
     var cycle = 0
     var crt = ""
     val intervals = listOf(20,60,100,140,180,220)
+    var signalStrength = 0
 
-    fun execute(commands: ArrayDeque<Command>): Int{
-        var signalStrength = 0
+    fun part1(commands: ArrayDeque<Command>): Int{
         while(commands.isNotEmpty()){
             cycle +=1
             val command = commands.removeFirst()
@@ -22,7 +22,7 @@ fun main(){
                 command.instruction == "noop" -> {}
                 command.cycles == 0 -> register += command.value
                 else -> {
-                    command.updateCycle()
+                    command.reduceCycle()
                     commands.addFirst(command)
                 }
             }
@@ -31,7 +31,7 @@ fun main(){
         return signalStrength
     }
 
-    fun executeAndDraw(commands: ArrayDeque<Command>): String{
+    fun part2(commands: ArrayDeque<Command>): String{
         while(commands.isNotEmpty()){
             val command = commands.removeFirst()
             crt += when (cycle) {
@@ -43,7 +43,7 @@ fun main(){
                 command.instruction == "noop" -> {}
                 command.cycles == 0 -> register += command.value
                 else -> {
-                    command.updateCycle()
+                    command.reduceCycle()
                     commands.addFirst(command)
                 }
             }
@@ -54,14 +54,6 @@ fun main(){
         return crt
     }
 
-    fun part1(commands: ArrayDeque<Command>): Int{
-        return execute(commands)
-    }
-
-    fun part2(commands: ArrayDeque<Command>): String{
-        return executeAndDraw(commands)
-
-    }
     println(part1(commands))
     part2(commands).chunked(40).forEach { println(it) }
 }
@@ -78,7 +70,7 @@ fun parseInput(line: String): Command {
 
 class Command(val instruction: String, val value: Int, var cycles: Int) {
 
-        fun updateCycle(){
+        fun reduceCycle(){
             this.cycles -= 1
         }
 
