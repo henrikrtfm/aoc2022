@@ -5,6 +5,7 @@ typealias Point = Pair<Int,Int>
 private val DOWN = Point(0,1)
 private val LEFT = Point(-1,1)
 private val RIGHT = Point(1,1)
+
 fun main(){
     val rocks = resourceAsListOfString("src/day14/Day14.txt")
         .flatMap { line -> line.split(" -> ")
@@ -51,8 +52,6 @@ fun main(){
                     sand.add(self)
                     self = start
                 }
-
-
             }
         }
         return sand.size
@@ -67,8 +66,6 @@ fun main(){
                     sand.add(self)
                     self = start
                 }
-
-
             }
         }
         return sand.size
@@ -76,10 +73,8 @@ fun main(){
     //println(part1())
     println(part2())
 }
-
 private operator fun Point.plus(that: Point) = Point(
     this.first+that.first, this.second+that.second)
-
 private fun Set<Pair<Point,Point>>.contains(that: Point): Boolean{
     return this.map { it.contains(that) }.contains(true)
 }
@@ -92,7 +87,6 @@ private operator fun Pair<Point,Point>.contains(that: Point): Boolean {
     val yRange = minY..maxY
     return that.first in xRange && that.second in yRange
 }
-
 private fun Pair<Point,Point>.maxX(): Int {
     return maxOf(this.first.first, this.second.first)
 }
