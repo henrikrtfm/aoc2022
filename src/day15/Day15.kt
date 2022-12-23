@@ -6,6 +6,8 @@ import kotlin.math.absoluteValue
 typealias Point = Pair<Int,Int>
 typealias SensorBeacon = Pair<Point,Point>
 
+private const val MAX = 4000000
+private const val MIN = 0
 fun main(){
     val input = resourceAsListOfString("src/day15/Day15.txt").map { parsePair(it) }
 
@@ -13,8 +15,23 @@ fun main(){
         return input.filter { validSensor(row,it) }.flatMap { it.calculatePlaces(row) }.toSet().size-1
     }
 
-    println(part1(2000000))
-
+    fun part2(rows: IntRange): Int{
+        for(row in rows){
+            val test = input.filter { validSensor(row,it) }
+                .flatMap { it.calculatePlaces(row) }
+                .toSet()
+                .filter { it.first in MIN..MAX  }
+                .map { it.first }
+                .toSet()
+            when(test.size-1 < MAX){
+                true -> return (MIN..MAX).toSet().subtract(test).first()*4000000+row
+                else -> {}
+            }
+        }
+        return 0
+    }
+    println(part1(11))
+    println(part2(MIN..MAX))
 }
 fun getSensorY(item: SensorBeacon): Int =  item.first.second
 
@@ -24,7 +41,7 @@ fun manhattanDistance(item: SensorBeacon): Int{
     return (item.first.first-item.second.first).absoluteValue+(item.first.second-item.second.second).absoluteValue
 }
 
-fun SensorBeacon.calculatePlaces(row: Int): Set<Point>{
+fun SensorBeacon.calculatePlaces(row: Int): Set<Point> {
     return when (row > getSensorY(this)) {
         true -> {
             val offsetY = row - getSensorY(this)
@@ -32,7 +49,6 @@ fun SensorBeacon.calculatePlaces(row: Int): Set<Point>{
             val counter = offsetX * 2 + 1
             addToResultSet(this.getSensor(), offsetX, offsetY, counter)
         }
-
         else -> {
             val offsetY = (getSensorY(this) - row)
             val offsetX = (manhattanDistance(this) - offsetY)
@@ -45,7 +61,6 @@ fun addToResultSet(sensor: Point, offsetX: Int, offsetY: Int, counter: Int): Set
     val resultSet = mutableSetOf<Point>()
     for(x in 0 until counter){
         resultSet.add(sensor+Point(-offsetX+x,offsetY))
-
     }
     return resultSet
 }
